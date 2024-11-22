@@ -50,7 +50,9 @@ impl Service<Request<Incoming>> for Router {
     type Error = hyper::Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
     fn call(&mut self, req: Request<Self::ReqBody>) -> Self::Future {
-        self.route(req)
+        Box::pin(async move {
+            Err(hyper::Error::from
+        })
     }
 }
 
