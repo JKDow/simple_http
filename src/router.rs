@@ -1,4 +1,8 @@
-use hyper::{Method, Request, Response};
+use std::{future::Future, pin::Pin};
+
+use bytes::Bytes;
+use http_body_util::combinators::BoxBody;
+use hyper::{body::Incoming, service::Service, Method, Request, Response};
 
 use crate::{routing::{CallbackFuture, CallbackResult, Route, RouteHandler}, utils::empty_body};
 
@@ -30,7 +34,7 @@ impl Router {
         let method = req.method().clone();
         let path = req.uri().path().to_string();
         tracing::debug!("Request: {} {}", method, path);
-        match self.routes.iter().find(|r| r.matches(&method, &path)) {
+        match self.routes.iter().find(|r| r.matches(&method, &path).is_some()) {
             Some(route) => route.callback(req).await,
             None => {
                 let mut not_found = Response::new(empty_body());
@@ -38,6 +42,15 @@ impl Router {
                 Ok(not_found)
             }
         }
+    }
+}
+
+impl Service<Request<Incoming>> for Router {
+    type Response = Response<BoxBody<Bytes, hyper::Error>>;
+    type Error = hyper::Error;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
+    fn call(&mut self, req: Request<Self::ReqBody>) -> Self::Future {
+        self.route(req)
     }
 }
 
