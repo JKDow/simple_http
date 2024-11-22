@@ -1,4 +1,4 @@
-use hyper::{server::conn::http1, service::service_fn};
+use hyper::server::conn::http1;
 use hyper_util::rt::{TokioIo, TokioTimer};
 use tokio::{io, net::{TcpListener, TcpStream}};
 use tracing::Instrument;
@@ -44,7 +44,7 @@ impl WebServer {
         tracing::info!("Accepted connection");
         let server = http1::Builder::new()
             .timer(TokioTimer::new())
-            .serve_connection(io, service_fn(|req| async { router.route(req).await }))
+            .serve_connection(io, router)
             .await;
         if let Err(e) = server {
             tracing::error!("Error serving connection: {}", e);
