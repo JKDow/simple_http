@@ -1,7 +1,6 @@
 use hyper::Method;
 
-use crate::{basic_handler::BasicHandler, callback::{CallbackFuture, CallbackInput, CallbackResult, RouteHandler}};
-
+use super::{BasicHandler, CallbackFuture, CallbackInput, CallbackResult, RouteHandler};
 
 pub struct Route {
     method: Method,

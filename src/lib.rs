@@ -1,16 +1,16 @@
-pub(crate) mod basic_handler;
-pub(crate) mod callback;
-pub(crate) mod route;
 pub(crate) mod router;
 pub(crate) mod server;
-pub mod utils;
+pub(crate) mod route_utils;
 
-pub use basic_handler::*;
-pub use callback::*;
-pub use route::*;
-pub use router::*;
-pub use server::*;
+pub use server::WebServer;
+
+pub mod routing {
+    pub use crate::router::Router;
+    pub use crate::route_utils::*;
+}
 
 pub mod hyper {
     pub use hyper::{Method, Request, Response};
 }
+
+pub mod utils;

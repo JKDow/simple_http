@@ -1,5 +1,6 @@
 use hyper::{Method, Request, Response};
-use crate::{callback::{CallbackFuture, CallbackResult, RouteHandler}, route::Route, utils::empty_body};
+
+use crate::{routing::{CallbackFuture, CallbackResult, Route, RouteHandler}, utils::empty_body};
 
 pub struct Router {
     routes: Vec<Route>,

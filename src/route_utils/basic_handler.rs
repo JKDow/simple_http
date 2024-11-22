@@ -1,4 +1,5 @@
-use crate::{callback::{CallbackFuture, CallbackInput}, RouteHandler};
+use super::{CallbackFuture, CallbackInput, RouteHandler};
+
 
 pub struct BasicHandler {
     callback: Box<dyn Fn(CallbackInput) -> CallbackFuture + Send + Sync>,
