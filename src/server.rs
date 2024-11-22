@@ -1,6 +1,6 @@
 use hyper::{server::conn::http1, service::service_fn};
 use hyper_util::rt::{TokioIo, TokioTimer};
-use tokio::net::{TcpListener, TcpStream};
+use tokio::{io, net::{TcpListener, TcpStream}};
 use tracing::Instrument;
 
 use crate::router::Router;
@@ -20,7 +20,8 @@ impl WebServer {
     }
 
     #[tracing::instrument(skip_all)]
-    pub async fn run_server(self) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn run_server(self) -> io::Result<()> {
+        tracing::info!("Starting server");
         let listener = TcpListener::bind(self.addr).await?;
         tracing::info!("Listening on: {}", self.addr);
         let span = tracing::Span::current();
